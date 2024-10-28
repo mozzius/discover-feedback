@@ -57,7 +57,7 @@ Reason: ${report.reasonType.slice("com.atproto.moderation.defs#reason".length)}
 Message:
 ${report.reason}`;
 
-  await fetch(SLACK_WEBHOOK, {
+  const { ok } = await fetch(SLACK_WEBHOOK, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -66,6 +66,12 @@ ${report.reason}`;
       text: message,
     }),
   });
+
+  if (ok) {
+    console.log("sent message to slack");
+  } else {
+    console.error("failed to send message to slack");
+  }
 }
 
 const agent = new AtpAgent({
