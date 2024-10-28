@@ -1,7 +1,6 @@
 {
   "imports": {
     "@atproto/api": "npm:@atproto/api@^0.13.12",
-    "@std/dotenv": "jsr:@std/dotenv@^0.225.2",
-    "@wok/djwt": "jsr:@wok/djwt@^3.0.2"
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.2"
   }
 }
