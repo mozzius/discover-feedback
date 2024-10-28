@@ -13,7 +13,7 @@ const agent = new AtpAgent({
   service: "https://public.api.bsky.app",
 });
 
-Deno.serve(async (request) => {
+Deno.serve({ port: 6969 }, async (request) => {
   const auth = request.headers.get("authorization");
   if (!auth) return new Response("Unauthorized", { status: 401 });
   const [_header, payload] = decode(auth);
