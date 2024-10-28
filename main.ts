@@ -4,37 +4,43 @@ import {
   type ComAtprotoModerationCreateReport,
   ComAtprotoRepoStrongRef,
 } from "npm:@atproto/api";
-import { decode } from "djwt";
+import { decode } from "jsr:@wok/djwt";
 import { load } from "jsr:@std/dotenv";
 
 const { SLACK_WEBHOOK } = await load();
 
-export default {
-  async fetch(request) {
-    const auth = request.headers.get("authorization");
-    if (!auth) return new Response("Unauthorized", { status: 401 });
-    const { sub: did } = decode(auth);
-    const pathname = new URL(request.url).pathname;
-    switch (pathname) {
-      case "/":
-        return new Response("hello world");
-      case "/xrpc/com.atproto.moderation.createReport": {
-        const report = await request.json();
-        handleReport(
-          report as ComAtprotoModerationCreateReport.InputSchema,
-          did,
-        );
-        return new Response("ok");
-      }
-      default:
-        if (pathname.startsWith("/xrpc/")) {
-          return new Response("Method Not Implemented", { status: 501 });
-        } else {
-          return new Response("Not Found", { status: 404 });
-        }
+const agent = new AtpAgent({
+  service: "https://public.api.bsky.app",
+});
+
+Deno.serve(async (request) => {
+  const auth = request.headers.get("authorization");
+  if (!auth) return new Response("Unauthorized", { status: 401 });
+  const [_header, payload] = decode(auth);
+  if (typeof payload !== "object" || payload === null || !("sub" in payload)) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  const did = payload.sub as string;
+  const pathname = new URL(request.url).pathname;
+  switch (pathname) {
+    case "/":
+      return new Response("hello world");
+    case "/xrpc/com.atproto.moderation.createReport": {
+      const report = await request.json();
+      handleReport(
+        report as ComAtprotoModerationCreateReport.InputSchema,
+        did,
+      );
+      return new Response("ok");
     }
-  },
-} satisfies Deno.ServeDefaultExport;
+    default:
+      if (pathname.startsWith("/xrpc/")) {
+        return new Response("Method Not Implemented", { status: 501 });
+      } else {
+        return new Response("Not Found", { status: 404 });
+      }
+  }
+});
 
 async function handleReport(
   report: ComAtprotoModerationCreateReport.InputSchema,
@@ -73,7 +79,3 @@ ${report.reason}`;
     console.error("failed to send message to slack");
   }
 }
-
-const agent = new AtpAgent({
-  service: "https://public.api.bsky.app",
-});

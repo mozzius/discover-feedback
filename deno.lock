@@ -3,12 +3,23 @@
   "specifiers": {
     "jsr:@std/dotenv@*": "0.225.2",
     "jsr:@std/dotenv@~0.225.2": "0.225.2",
+    "jsr:@std/encoding@0.221": "0.221.0",
+    "jsr:@wok/djwt@^3.0.2": "3.0.2",
     "npm:@atproto/api@*": "0.13.12",
     "npm:@atproto/api@~0.13.12": "0.13.12"
   },
   "jsr": {
     "@std/dotenv@0.225.2": {
       "integrity": "e2025dce4de6c7bca21dece8baddd4262b09d5187217e231b033e088e0c4dd23"
+    },
+    "@std/encoding@0.221.0": {
+      "integrity": "d1dd76ef0dc5d14088411e6dc1dede53bf8308c95d1537df1214c97137208e45"
+    },
+    "@wok/djwt@3.0.2": {
+      "integrity": "e1c8afe6e321941edda40d91b089e93738469b994d53f41f82e0e7fcd7dde259",
+      "dependencies": [
+        "jsr:@std/encoding"
+      ]
     }
   },
   "npm": {
@@ -92,6 +103,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/dotenv@~0.225.2",
+      "jsr:@wok/djwt@^3.0.2",
       "npm:@atproto/api@~0.13.12"
     ]
   }
