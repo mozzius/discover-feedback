@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "@atproto/api": "npm:@atproto/api@^0.13.12",
+    "djwt": "https://deno.land/x/djwt@v3.0.2/mod.ts",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.2"
+  }
+}
