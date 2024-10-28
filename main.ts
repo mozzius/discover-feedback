@@ -18,7 +18,12 @@ Deno.serve({ port: 6969 }, async (request) => {
       handleReport(
         report as ComAtprotoModerationCreateReport.InputSchema,
       );
-      return new Response("ok");
+      return Response.json(
+        {
+          id: 0,
+          ...report,
+        } satisfies ComAtprotoModerationCreateReport.OutputSchema,
+      );
     }
     default:
       if (pathname.startsWith("/xrpc/")) {
