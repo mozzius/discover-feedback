@@ -20,7 +20,7 @@ Deno.serve({ port: 6969 }, async (request) => {
       );
       return Response.json(
         {
-          id: 0,
+          id: Number(Math.random().toString().slice(2)),
           ...report,
         } satisfies ComAtprotoModerationCreateReport.OutputSchema,
       );
@@ -34,6 +34,8 @@ Deno.serve({ port: 6969 }, async (request) => {
   }
 });
 
+const reported = new Set<string>();
+
 async function handleReport(
   report: ComAtprotoModerationCreateReport.InputSchema,
 ) {
@@ -41,6 +43,13 @@ async function handleReport(
     report.subject.type !== "post" ||
     !ComAtprotoRepoStrongRef.isMain(report.subject)
   ) return;
+
+  if (reported.has(report.subject.uri)) {
+    console.log("already reported");
+    return;
+  }
+
+  reported.add(report.subject.uri);
 
   const aturi = new AtUri(report.subject.uri);
 
